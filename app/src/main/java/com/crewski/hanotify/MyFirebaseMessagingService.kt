@@ -42,6 +42,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         var actions: JSONArray = JSONArray()
         var image = ""
         var icon = ""
+        var channelId = "General"
 
         val dataJSON = JSONObject(remoteMessage!!.data);
 
@@ -55,6 +56,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         if (dataJSON.has("color")) {
             color = dataJSON.getString("color")// handler
+        }
+        if (dataJSON.has("channelId")) {
+            channel = dataJSON.getString("channelId")// handler to set custom distinct notification sounds on Android: https://developer.android.com/training/notify-user/channels
         }
         if (dataJSON.has("actions")) {
             actions = JSONArray(dataJSON.getString("actions"))// handler
@@ -96,7 +100,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
 
-        sendNotification(message, title, color, actions, tag, image, icon)
+        sendNotification(message, title, color, channelId, actions, tag, image, icon)
 
     }
 
@@ -105,16 +109,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      *
      * @param messageBody FCM message body received.
      */
-    private fun sendNotification(messageBody: String, title: String, color: String, actions: JSONArray, tag: Int, image_url: String, icon_url: String) {
+    private fun sendNotification(messageBody: String, title: String, color: String, channelId: String, actions: JSONArray, tag: Int, image_url: String, icon_url: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
 //        val notification_id = (353..37930).random()
-        val channelId = "HomeAssistant"
+        //val channelId = "HomeAssistant"
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId,
-                    "Channel human readable title",
+                    channelId + " notifications",
                     NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(channel)
         }

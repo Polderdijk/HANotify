@@ -52,6 +52,7 @@ ATTR_DISMISS = 'dismiss'
 ATTR_TAG = 'tag'
 ATTR_IMAGE = 'image'
 ATTR_ICON = 'icon'
+ATTR_CHANNEL = 'channel'
 
 
 
@@ -301,6 +302,8 @@ class FCMAndroidNotificationService(BaseNotificationService):
             if data.get(ATTR_ICON) is not None:
                 msg_payload[ATTR_ICON] = data.get(ATTR_ICON)
                 message_type = ATTR_DATA
+            if data.get(ATTR_CHANNEL) is not None:
+                msg_payload[ATTR_CHANNEL] = data.get(ATTR_CHANNEL)
 
             if data.get(ATTR_TAG) is not None:
                 if isinstance(data.get(ATTR_TAG), int):
